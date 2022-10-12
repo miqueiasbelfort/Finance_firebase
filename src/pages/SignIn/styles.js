@@ -19,7 +19,7 @@ export const Input = styled.TextInput.attrs({
     placeholderTextColor: 'rgba(255,255,255,0.20)'
 })`
     background: rgba(0,0,0,.20);
-    width: 50%;
+    width: 90%;
     font-size: 17px;
     color: #fff;
     margin-bottom: 15px;
@@ -40,7 +40,7 @@ export const SubmitText = styled.Text`
     color: #131313;
 `
 export const Link = styled.TouchableOpacity`
-    margin-top: 5px;
+    margin-top: 10px;
     margin-bottom: 5px;
 `
 export const LinkText = styled.Text`
