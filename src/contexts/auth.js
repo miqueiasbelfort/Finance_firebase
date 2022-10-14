@@ -1,12 +1,28 @@
-import React, {createContext, useState} from "react"
+import React, {createContext, useState, useEffect} from "react"
 import firebase from "../servers/firebaseConfig"
-import AsyncStorage from "@react-native-community/async-storage"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const AuthContext = createContext({})
 
 function AuthProvider({ children }){
 
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function storageGet(){
+            const localizationUser = await AsyncStorage.getItem('AuthUser')
+            if(localizationUser){
+                setUser(JSON.parse(localizationUser))
+            }
+            setLoading(false)
+        }
+        storageGet()
+    },[])
+
+    async function storageUser(data){
+        await AsyncStorage.setItem('AuthUser', JSON.stringify(data))
+    }
 
     async function signUp(email, password, name){
         await firebase.auth().createUserWithEmailAndPassword(email,password)
@@ -47,13 +63,16 @@ function AuthProvider({ children }){
             })
     }
 
-    async function storageUser(data){
-        await AsyncStorage.setItem('Auth_user', JSON.stringify(data))
+    async function signOut(){
+        await firebase.auth().signOut()
+        await AsyncStorage.clear().then(() => {
+            setUser(null)
+        })
     }
 
     return(
         <AuthContext.Provider
-            value={{ signed: !!user , user, signUp, signIn }}
+            value={{ signed: !!user , user, signUp, signIn, loading, signOut }}
         >
             {children}
         </AuthContext.Provider>
