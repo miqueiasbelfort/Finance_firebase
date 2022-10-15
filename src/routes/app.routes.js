@@ -10,30 +10,40 @@ const AppDrawer = createDrawerNavigator()
 function AppRoutes(){
     return (
         <AppDrawer.Navigator
-            drawerStyle={{
-                backgroundColor: '#171717'
-            }}
-            drawerContentOptions={{
-                labelStyle: {
+            screenOptions={{
+                drawerLabelStyle: {
                     fontWeight: 'bold'
                 },
-                activeTintColor: '#fff',
-                activeBackgroundColor: '#00b94a',
-                inactiveBackgroundColor: '#000',
-                inactiveTintColor: '#ddd',
-                itemStyle: {
-                    marginVertical: 5,
-                }
+                drawerActiveTintColor: '#fff',
+                drawerActiveBackgroundColor: '#00b94a',
+                drawerInactiveBackgroundColor: '#000',
+                drawerInactiveTintColor: '#ddd',
+                drawerItemStyle: {
+                    marginVertical: 5
+                },
+                drawerStyle: {
+                    backgroundColor: '#171717'
+                },
+                headerShown: false,
             }}
         >
             <AppDrawer.Screen
                 name="Home" component={Home}
+                options={{
+                    drawerLabel: 'Principal'
+                }}
             />
             <AppDrawer.Screen
                 name="New" component={New}
+                options={{
+                    drawerLabel: 'Registrar'
+                }}
             />
             <AppDrawer.Screen
                 name="Profile" component={Profile}
+                options={{
+                    drawerLabel: 'Perfil'
+                }}
             />
         </AppDrawer.Navigator>
     )
