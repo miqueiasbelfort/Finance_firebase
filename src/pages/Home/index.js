@@ -27,7 +27,7 @@ export default function Home() {
     <Background>
       <Header/>
       <Container>
-        <Name>Olá Lucas!</Name>
+        <Name>Olá {user && user.name}!</Name>
         <Saldo>R$ 128,95</Saldo>
       </Container>
       <Title>Suas Movimentações</Title>
