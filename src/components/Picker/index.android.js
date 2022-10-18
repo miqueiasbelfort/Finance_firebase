@@ -6,7 +6,7 @@ import {
 } from "./style"
 
 
-export default function Picker({onChange, type}) {
+export default function PickerHTML({onChange, type}) {
   return (
     <PickerView>
         <Picker
@@ -16,8 +16,8 @@ export default function Picker({onChange, type}) {
             selectedValue={type}
             onValueChange={ value => onChange(value) }
         >
-            <Picker.Item labe="Receita" value="Receita"/>
-            <Picker.Item labe="Despesa" value="Despesa"/>
+            <Picker.Item label="Receita" value="Receita"/>
+            <Picker.Item label="Despesa" value="Despesa"/>
         </Picker>
     </PickerView>
   )
