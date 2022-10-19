@@ -18,7 +18,7 @@ export default function ListRender({data}) {
             tipo={data.type}
         >
             <Feather 
-                name={data.type === 'Dispesa' ? 'arrow-down' : 'arrow-up'}
+                name={data.type === 'Despesa' ? 'arrow-down' : 'arrow-up'}
                 size={20} 
                 color="#fff"
             />
