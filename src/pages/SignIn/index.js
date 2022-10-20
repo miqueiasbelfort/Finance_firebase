@@ -1,4 +1,4 @@
-import {Platform} from "react-native"
+import {Platform, ActivityIndicator} from "react-native"
 import React, {useState, useContext} from 'react'
 import { useNavigation } from "@react-navigation/native"
 import { AuthContext } from "../../contexts/auth"
@@ -18,7 +18,7 @@ import {
 export default function SignIn() {
 
   const navigation = useNavigation()
-  const {signIn} = useContext(AuthContext)
+  const {signIn, loadingAuth} = useContext(AuthContext)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -53,11 +53,18 @@ export default function SignIn() {
             autoCapitalize='none'
             value={password}
             onChangeText={text => setPassword(text)}
+            secureTextEntry={true}
           />
         </AreaInput>
 
         <SubmitButton onPress={handleSignIn}>
-          <SubmitText>Acessar</SubmitText>
+          {
+            loadingAuth ? (
+              <ActivityIndicator size={20} color="#fff"/>
+            ) : (
+              <SubmitText>Acessar</SubmitText>
+            )
+          }
         </SubmitButton>
 
         <Link onPress={() => navigation.navigate('SignUp')}>

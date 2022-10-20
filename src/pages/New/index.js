@@ -52,7 +52,7 @@ export default function New() {
     await firebase.database().ref('historico').child(uid).child(key).set({
       type: type,
       value: value,
-      date: format(new Date(), 'dd/MM/yy')
+      date: format(new Date(), 'dd/MM/yyyy')
     })
 
     // atualizar o saldo
