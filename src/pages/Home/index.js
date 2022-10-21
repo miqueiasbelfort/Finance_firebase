@@ -1,4 +1,4 @@
-import { Alert } from 'react-native'
+import { Alert, Platform, TouchableOpacity } from 'react-native'
 import React, {useContext, useState, useEffect} from 'react'
 import {AuthContext} from "../../contexts/auth"
 import firebase from "../../servers/firebaseConfig"
@@ -12,8 +12,11 @@ import {
   Name,
   Saldo,
   Title,
+  Area,
   List
 } from "./style"
+import { FontAwesome } from '@expo/vector-icons';
+import DatePicker from "../../components/Calender"
 
 export default function Home() {
 
@@ -23,12 +26,16 @@ export default function Home() {
   const [historico, setHistorico] = useState([])
   const [saldo, setSaldo] = useState(0)
 
+  const [newDate, setNewDate] = useState(new Date())
+  const [show, setShow] = useState(false)
+
+
   useEffect(() => {
     async function loadList(){
       await firebase.database().ref('users').child(uid).on('value', snapshot=>{
         setSaldo(snapshot.val().saldo)
       })
-      await firebase.database().ref('historico').child(uid).orderByChild('date').equalTo(format(new Date, 'dd/MM/yyyy')).limitToLast(10).on('value', snapshot => {
+      await firebase.database().ref('historico').child(uid).orderByChild('date').equalTo(format(newDate, 'dd/MM/yyyy')).limitToLast(10).on('value', snapshot => {
           setHistorico([])
           snapshot.forEach((childItem) => {
             let list = {
@@ -42,14 +49,13 @@ export default function Home() {
         })
     }
     loadList()
-  }, [])
-
+  }, [newDate])
   const handleDelete = (data) => {
 
     const [dayItem, monthItem, yarnItem] = data.date.split('/')
     const dateItem = new Date(`${yarnItem}/${monthItem}/${dayItem}`)
 
-    const todayFormat = format(new Date(), 'dd/MM/yyyy')
+    const todayFormat = format(newDate, 'dd/MM/yyyy')
     const [dayToday, monthToday, yarnToday] = todayFormat.split('/')
     const today = new Date(`${yarnToday}/${monthToday}/${dayToday}`)
 
@@ -72,7 +78,6 @@ export default function Home() {
       ]
     )
   }
-
   const handleDeleteSuccess = async (data) => {
     await firebase.database().ref('historico').child(uid).child(data.key).remove().then(async() => {
       let saldoAtual = saldo
@@ -86,6 +91,16 @@ export default function Home() {
       alert(err)
     })
   }
+  const handleShowPicker = () => {
+    setShow(true)
+  }
+  const handleClose = () => {
+    setShow(false)
+  }
+  const onChange = (date) => {
+    setShow(Platform.OS === 'ios')
+    setNewDate(date)
+  }
 
   return (
     <Background>
@@ -94,7 +109,12 @@ export default function Home() {
         <Name>Olá {user && user.name}!</Name>
         <Saldo>R$ {(saldo.toFixed(2).replace(/(\d)(?=(\d(3))+(?!\d))/g, '$1.')).replace('.',',')}</Saldo>
       </Container>
-      <Title>Ultimas Movimentações</Title>
+      <Area>
+        <TouchableOpacity onPress={handleShowPicker}>
+          <FontAwesome name="calendar" size={22} color="#fff" />
+        </TouchableOpacity>
+        <Title>Ultimas Movimentações</Title>
+      </Area>
 
       <List
         showsVerticalScrollIndicator={false}
@@ -104,6 +124,16 @@ export default function Home() {
           <ListRender data={item} deleteItem={handleDelete}/>
         )}
       />
+
+      {
+        show && (
+          <DatePicker
+            onClose={handleClose}
+            date={newDate}
+            onChange={onChange}
+          />
+        )
+      }
     </Background>
   )
 }
